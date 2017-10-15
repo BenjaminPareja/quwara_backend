@@ -1,4 +1,7 @@
 var Paciente = require('../models/paciente.model');
+var Horario = require('../models/horario.model');
+var Evento = require('../models/eventos.model');
+var Recomendaciones = require('../models/recomendaciones.model');
 var mongoose = require('mongoose');
 var validator = require('validator');
 
@@ -16,11 +19,22 @@ module.exports = {
     },
 
     findOne: function(req,res){
-        Paciente.find({'dni': req.params.dni},function (err, pacientes) {
+        Paciente.find({'dni': req.params.dni},function (err, paciente) {
             if (err)
                 res.send(err);
+            else{
+                Horario.find({'dni': req.params.dni},function (err, horario){
+                    Recomendaciones.find({'dia': Date.now()},function (err, recomendaciones){
 
-            res.json(pacientes);
+                     res.json({
+                         paciente:paciente,
+                         horario:horario,
+                         recomendaciones:recomendaciones
+                     })
+
+            })
+            })
+}
 
         })
     },
